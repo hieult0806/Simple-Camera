@@ -12,6 +12,7 @@ import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.view.*
 import android.widget.LinearLayout
+import androidx.camera.core.ImageProcessor.Response
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.*
@@ -41,8 +42,11 @@ import com.simplemobiletools.camera.views.FocusCircleView
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
 import com.simplemobiletools.commons.models.Release
+import fi.iki.elonen.NanoHTTPD
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+
 
 class MainActivity : SimpleActivity(), PhotoProcessor.MediaSavedListener, CameraXPreviewListener {
     private companion object {
@@ -114,6 +118,13 @@ class MainActivity : SimpleActivity(), PhotoProcessor.MediaSavedListener, Camera
                     WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
+        val server = MyHttpServer(this)
+        try {
+            server.start()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
     }
 
     override fun onResume() {
@@ -948,6 +959,18 @@ class MainActivity : SimpleActivity(), PhotoProcessor.MediaSavedListener, Camera
             add(Release(46, R.string.release_46))
             add(Release(52, R.string.release_52))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
+        }
+    }
+
+    class MyHttpServer(val context:MainActivity) : NanoHTTPD(8888) {
+        override fun serve(session: IHTTPSession?): Response {
+            val uri = session!!.uri
+            if (uri.contains("CAPTURE")) {
+                context.shutterPressed();
+            }
+
+            val response = "Hello, this is your NanoHTTPD server!"
+            return newFixedLengthResponse(response)
         }
     }
 }

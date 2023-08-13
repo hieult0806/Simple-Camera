@@ -94,4 +94,5 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.window)
+    implementation("org.nanohttpd:nanohttpd:2.3.1")
 }

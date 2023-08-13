@@ -1,3 +1,7 @@
+# Mục đích của branch này là để phục vụ cho máy CNC dùng chụp ảnh thôi.
+
+
+
 # Simple Camera
 <img alt="Logo" src="graphics/icon.png" width="120" />
 
